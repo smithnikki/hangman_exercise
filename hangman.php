@@ -1,5 +1,7 @@
 <?php
 
+require_once("hangman_drawer.php");
+
 class Hangman {
 
   const LIMIT = 10;
@@ -10,7 +12,7 @@ class Hangman {
 
   public function __construct() {
     echo "Starting the game\n";
-    //$this->drawer = new HangmanDrawer();
+    $this->drawer = new HangmanDrawer();
     $this->word = str_split(
       strtolower(
         file_get_contents("http://randomword.setgetgo.com/get.php")
@@ -18,21 +20,13 @@ class Hangman {
     );
     $this->printState();
     $this->listenForInput();
-
-    // for ($i = 0; $i < strlen($word); $i ++) {
-      // if ($word[$i] = $guess) {
-        // echo $guess . " ";
-        // $rightAnwer = true;
-      // } else {
-        // echo "_ ";
-      // };
-    // }
   }
 
   private function printState() {
     echo "Remaining wrong guesses: " . (self::LIMIT - count($this->bad_letters)) . "\n";
     echo "Bad guesses: [" . join(', ', $this->bad_letters) . "]\n";
     $this->printWordInProgress();
+    $this->drawer->draw(count($this->bad_letters));
     echo "\n\n\n\n";
   }
 
@@ -54,9 +48,9 @@ class Hangman {
         } else {
           array_push($this->bad_letters, $input);
           if(count($this->bad_letters) >= self::LIMIT) {
+            $this->printState();
             echo "The word is: " . join("", $this->word) . "\n";
             echo "Game over!\n";
-
             exit(0);
           }
         }
@@ -87,6 +81,7 @@ class Hangman {
         $game_won = false;
       }
     }
+    echo "\n";
     if ($game_won){
       echo "\n Hooray!!\n";
       exit(0);
