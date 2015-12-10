@@ -10,7 +10,7 @@ class Hangman {
 
   public function __construct() {
     echo "Starting the game\n";
-    $this->drawer = new HangmanDrawer();
+    //$this->drawer = new HangmanDrawer();
     $this->word = str_split(
       strtolower(
         file_get_contents("http://randomword.setgetgo.com/get.php")
@@ -44,18 +44,37 @@ class Hangman {
   }
 
   private function handleInput($input) {
-    if (in_array($input, $this->word)) {
-      array_push($this->good_letters, $input);
-    } else {
-      array_push($this->bad_letters, $input);
-      if(count($this->bad_letters) >= self::LIMIT) {
-        echo "The word is: " . join("", $this->word) . "\n";
-        echo "Game over!\n";
+    $input = strtolower($input);
+    if ($this->validateInput($input)) {
+      if (in_array($input, $this->good_letters) || in_array($input, $this->bad_letters)) {
+        echo "You already played that letter. Pick again! \n\n\n";
+      } else {
+        if (in_array($input, $this->word)) {
+          array_push($this->good_letters, $input);
+        } else {
+          array_push($this->bad_letters, $input);
+          if(count($this->bad_letters) >= self::LIMIT) {
+            echo "The word is: " . join("", $this->word) . "\n";
+            echo "Game over!\n";
 
-        exit(0);
+            exit(0);
+          }
+        }
       }
+    } else {
+      echo "Please enter a single letter\n\n";
     }
     $this->printState();
+  }
+
+  private function validateInput($input) {
+    if (strlen($input) != 1) {
+      return false;
+    }
+    if (!ctype_alpha($input)) {
+      return false;
+    }
+    return true;
   }
 
   private function printWordInProgress() {
