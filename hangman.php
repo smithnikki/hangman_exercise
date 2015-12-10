@@ -41,7 +41,7 @@ class Hangman {
     $input = strtolower($input);
     if ($this->validateInput($input)) {
       if (in_array($input, $this->good_letters) || in_array($input, $this->bad_letters)) {
-        echo "You already played that letter. Pick again! \n\n\n";
+        echo "You already played that letter, weirdo. Pick again! \n\n\n";
       } else {
         if (in_array($input, $this->word)) {
           array_push($this->good_letters, $input);
@@ -50,13 +50,13 @@ class Hangman {
           if(count($this->bad_letters) >= self::LIMIT) {
             $this->printState();
             echo "The word is: " . join("", $this->word) . "\n";
-            echo "Game over!\n";
+            echo "OMG, you murderer. You just hung someone. Game over!\n";
             exit(0);
           }
         }
       }
     } else {
-      echo "Please enter a single letter\n\n";
+      echo "ERROR: Nope. Can't do that. Please enter a single letter\n\n";
     }
     $this->printState();
   }
